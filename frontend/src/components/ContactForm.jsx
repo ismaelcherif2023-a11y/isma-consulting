@@ -14,7 +14,7 @@ export default function ContactForm() {
     e.preventDefault()
     setStatus('loading')
     try {
-      const res = await fetch('/api/leads', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
