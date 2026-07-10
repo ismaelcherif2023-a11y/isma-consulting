@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FAF8F4;
+  color: #14213D;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #E8B04B;
+  outline-offset: 3px;
+}
+
+/* Stamp / passport visa motif */
+.visa-stamp {
+  position: relative;
+  border: 2px solid currentColor;
+  border-radius: 9999px;
+}
+.visa-stamp::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed currentColor;
+  border-radius: 9999px;
+  opacity: 0.5;
+}
