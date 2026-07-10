@@ -1,7 +1,7 @@
 const offers = [
   {
     name: 'Dossier',
-    price: 'à partir de 80€',
+    price: 'à partir de 110€',
     tagline: 'Pour poser des bases solides',
     features: [
       'Constitution complète du dossier Campus France',
@@ -13,7 +13,7 @@ const offers = [
   },
   {
     name: 'Entretien',
-    price: 'à partir de 60€',
+    price: 'à partir de 90€',
     tagline: "Pour aborder l'oral avec confiance",
     features: [
       '2 simulations d\u2019entretien filmées',
@@ -25,13 +25,13 @@ const offers = [
   },
   {
     name: 'Complet',
-    price: 'à partir de 120€',
+    price: 'à partir de 250€',
     tagline: 'Du dossier au visa, accompagné de bout en bout',
     features: [
       'Tout le pack Dossier + Entretien',
       'Choix des écoles selon votre profil',
       'Suivi jusqu\u2019à la réponse Campus France',
-      'Accompagnement démarches visa'
+      'Accompagnement démarches visa jusqu\u2019à l\u2019obtention'
     ],
     highlight: true
   }
@@ -78,7 +78,7 @@ export default function Offers() {
                   </li>
                 ))}
               </ul>
-              <a
+              
                 href="#contact"
                 className={`text-center rounded-full py-3 font-body font-medium focus-ring transition-colors ${
                   o.highlight
