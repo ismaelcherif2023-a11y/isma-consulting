@@ -59,7 +59,7 @@ export default function Proofs() {
             Des admissions et des visas réels, pas des promesses.
           </h2>
           <p className="font-body text-navy/60 mt-4">
-            Documents partagés avec l'accord des candidats accompagnés, informations personnelles masquées.
+            Chaque preuve est publiée avec l'accord du candidat concerné.
           </p>
         </div>
 
