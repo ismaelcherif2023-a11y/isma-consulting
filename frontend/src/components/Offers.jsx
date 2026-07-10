@@ -50,14 +50,7 @@ export default function Offers() {
 
         <div className="grid md:grid-cols-3 gap-6 mt-14">
           {offers.map(o => (
-            <div
-              key={o.name}
-              className={`rounded-2xl p-8 flex flex-col ${
-                o.highlight
-                  ? 'bg-gold text-navy shadow-[0_25px_50px_-12px_rgba(232,176,75,0.35)] md:-translate-y-3'
-                  : 'bg-navy-light text-ivory'
-              }`}
-            >
+            <div key={o.name} className={`rounded-2xl p-8 flex flex-col ${o.highlight ? 'bg-gold text-navy shadow-[0_25px_50px_-12px_rgba(232,176,75,0.35)] md:-translate-y-3' : 'bg-navy-light text-ivory'}`}>
               {o.highlight && (
                 <span className="font-mono text-[0.65rem] uppercase tracking-widest bg-navy text-gold rounded-full px-3 py-1 w-fit mb-4">
                   Le plus choisi
@@ -78,14 +71,7 @@ export default function Offers() {
                   </li>
                 ))}
               </ul>
-              
-                href="#contact"
-                className={`text-center rounded-full py-3 font-body font-medium focus-ring transition-colors ${
-                  o.highlight
-                    ? 'bg-navy text-ivory hover:bg-navy-dark'
-                    : 'bg-ivory/10 text-ivory hover:bg-ivory/20'
-                }`}
-              >
+              <a href="#contact" className={`text-center rounded-full py-3 font-body font-medium focus-ring transition-colors ${o.highlight ? 'bg-navy text-ivory hover:bg-navy-dark' : 'bg-ivory/10 text-ivory hover:bg-ivory/20'}`}>
                 Choisir cette formule
               </a>
             </div>
