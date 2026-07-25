@@ -10,12 +10,13 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// Transporteur email (Brevo SMTP, comme pour Royal Cut) — optionnel
+// Transporteur email (Brevo SMTP) — optionnel
 let transporter = null
 if (process.env.SMTP_HOST) {
   transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
+    port: Number(process.env.SMTP_PORT || 465),
+    secure: true,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
@@ -38,7 +39,7 @@ app.post('/api/leads', async (req, res) => {
     if (transporter) {
       try {
         await transporter.sendMail({
-          from: process.env.NOTIFY_FROM || 'no-reply@envolcampus.fr',
+          from: process.env.NOTIFY_FROM || process.env.SMTP_USER,
           to: process.env.NOTIFY_TO || process.env.SMTP_USER,
           subject: `Nouvelle demande — ${name} (${formule})`,
           text: `Nom: ${name}\nTéléphone: ${phone}\nPays: ${country || '-'}\nFormule: ${formule}\nMessage: ${message || '-'}`
