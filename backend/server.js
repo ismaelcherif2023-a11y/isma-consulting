@@ -1,7 +1,6 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import nodemailer from 'nodemailer'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -10,18 +9,32 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// Transporteur email (Brevo SMTP) — optionnel
-let transporter = null
-if (process.env.SMTP_HOST) {
-  transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 465),
-    secure: true,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
+async function sendNotificationEmail({ name, phone, country, formule, message }) {
+  if (!process.env.BREVO_API_KEY) return
+
+  try {
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'api-key': process.env.BREVO_API_KEY
+      },
+      body: JSON.stringify({
+        sender: { email: process.env.NOTIFY_FROM || process.env.SMTP_USER },
+        to: [{ email: process.env.NOTIFY_TO || process.env.SMTP_USER }],
+        subject: `Nouvelle demande — ${name} (${formule})`,
+        textContent: `Nom: ${name}\nTéléphone: ${phone}\nPays: ${country || '-'}\nFormule: ${formule}\nMessage: ${message || '-'}`
+      })
+    })
+
+    if (!res.ok) {
+      const errText = await res.text()
+      console.error('Email non envoyé (API Brevo):', res.status, errText)
     }
-  })
+  } catch (err) {
+    console.error('Email non envoyé (erreur reseau):', err.message)
+  }
 }
 
 app.post('/api/leads', async (req, res) => {
@@ -36,18 +49,7 @@ app.post('/api/leads', async (req, res) => {
       data: { name, phone, country, formule, message }
     })
 
-    if (transporter) {
-      try {
-        await transporter.sendMail({
-          from: process.env.NOTIFY_FROM || process.env.SMTP_USER,
-          to: process.env.NOTIFY_TO || process.env.SMTP_USER,
-          subject: `Nouvelle demande — ${name} (${formule})`,
-          text: `Nom: ${name}\nTéléphone: ${phone}\nPays: ${country || '-'}\nFormule: ${formule}\nMessage: ${message || '-'}`
-        })
-      } catch (mailErr) {
-        console.error('Email non envoyé:', mailErr.message)
-      }
-    }
+    await sendNotificationEmail({ name, phone, country, formule, message })
 
     res.status(201).json({ ok: true, lead })
   } catch (err) {
@@ -57,7 +59,6 @@ app.post('/api/leads', async (req, res) => {
 })
 
 app.get('/api/leads', async (req, res) => {
-  // Endpoint simple pour consulter les leads reçus (à protéger par auth avant mise en prod)
   const leads = await prisma.lead.findMany({ orderBy: { createdAt: 'desc' } })
   res.json(leads)
 })
